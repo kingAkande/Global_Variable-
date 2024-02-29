@@ -1,34 +1,26 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.24;
+ 
 
-// Uncomment this line to use console.log
-// import "hardhat/console.sol";
+ 
+contract GlobalVariables{
 
-contract Lock {
-    uint public unlockTime;
-    address payable public owner;
+   uint amount;
 
-    event Withdrawal(uint amount, uint when);
+   mapping (address => uint ) private  balances;
 
-    constructor(uint _unlockTime) payable {
-        require(
-            block.timestamp < _unlockTime,
-            "Unlock time should be in the future"
-        );
 
-        unlockTime = _unlockTime;
-        owner = payable(msg.sender);
-    }
+   function deposit() external payable {
 
-    function withdraw() public {
-        // Uncomment this line, and the import of "hardhat/console.sol", to print a log in your terminal
-        // console.log("Unlock time is %o and block timestamp is %o", unlockTime, block.timestamp);
+             amount = balances[msg.sender];
 
-        require(block.timestamp >= unlockTime, "You can't withdraw yet");
-        require(msg.sender == owner, "You aren't the owner");
+             amount += msg.value;
+  }
 
-        emit Withdrawal(address(this).balance, block.timestamp);
+function balance() external view returns (uint){
 
-        owner.transfer(address(this).balance);
-    }
+           return amount;
+}
+      
+
 }
